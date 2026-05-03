@@ -18,7 +18,7 @@ public class ServiceClass {
     @Autowired
     private ProductRepository productRepository;
 
-    // ✅ 1. validateInventory → checks if inventory exists for product-store combination
+    // ✅ validateInventory → checks if inventory entry already exists for product-store combination
     public boolean validateInventory(Inventory inventory) {
         Optional<Inventory> existingInventory =
                 inventoryRepository.findByProductIdAndStoreId(
@@ -29,18 +29,18 @@ public class ServiceClass {
         return existingInventory.isEmpty();
     }
 
-    // ✅ 2. validateProduct → checks if product exists by name
+    // ✅ validateProduct → checks if product exists by name
     public boolean validateProduct(Product product) {
         Product existingProduct = productRepository.findByName(product.getName());
-        return existingProduct == null; // false if product exists, true otherwise
+        return existingProduct == null;
     }
 
-    // ✅ 3. validateProductId → checks if product exists by ID
+    // ✅ validateProductId → checks if product exists by ID
     public boolean validateProductId(long id) {
-        return productRepository.existsById(id); // true if product exists, false otherwise
+        return productRepository.existsById(id);
     }
 
-    // ✅ 4. getInventoryId → returns inventory record using product + store IDs
+    // ✅ getInventoryId → returns inventory record using product and store IDs
     public Inventory getInventoryId(Inventory inventory) {
         Optional<Inventory> existingInventory =
                 inventoryRepository.findByProductIdAndStoreId(
