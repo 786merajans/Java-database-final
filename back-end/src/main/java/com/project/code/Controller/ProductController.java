@@ -1,8 +1,8 @@
 package com.project.code.Controller;
 
 import com.project.code.Model.Product;
-import com.project.code.Repository.ProductRepository;
-import com.project.code.Repository.InventoryRepository;
+import com.project.code.Repo.ProductRepository;
+import com.project.code.Repo.InventoryRepository;
 import com.project.code.Service.ServiceClass;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -14,17 +14,16 @@ import java.util.*;
 @RequestMapping("/product")
 public class ProductController {
 
-    // 2. Autowired dependencies
     @Autowired
     private ProductRepository productRepository;
 
     @Autowired
-    private ServiceClass serviceClass;
-
-    @Autowired
     private InventoryRepository inventoryRepository;
 
-    // 3. Add product
+    @Autowired
+    private ServiceClass serviceClass;
+
+    // Add product
     @PostMapping
     public Map<String, Object> addProduct(@RequestBody Product product) {
         Map<String, Object> response = new HashMap<>();
@@ -41,8 +40,8 @@ public class ProductController {
         return response;
     }
 
-    // 4. Get product by ID
-    @GetMapping("/product/{id}")
+    // Get product by ID
+    @GetMapping("/{id}")
     public Map<String, Object> getProductById(@PathVariable Long id) {
         Map<String, Object> response = new HashMap<>();
         Optional<Product> product = productRepository.findById(id);
@@ -50,7 +49,7 @@ public class ProductController {
         return response;
     }
 
-    // 5. Update product
+    // Update product
     @PutMapping
     public Map<String, Object> updateProduct(@RequestBody Product product) {
         Map<String, Object> response = new HashMap<>();
@@ -59,7 +58,7 @@ public class ProductController {
         return response;
     }
 
-    // 6. Filter by category and name
+    // Filter by category and name
     @GetMapping("/category/{name}/{category}")
     public Map<String, Object> filterByCategoryProduct(@PathVariable String name,
                                                        @PathVariable String category) {
@@ -71,7 +70,7 @@ public class ProductController {
         } else if ("null".equals(name)) {
             products = productRepository.findByCategory(category);
         } else if ("null".equals(category)) {
-            products = productRepository.findByName(name);
+            products = Collections.singletonList(productRepository.findByName(name));
         } else {
             products = productRepository.findProductBySubNameAndCategory(name, category);
         }
@@ -80,7 +79,7 @@ public class ProductController {
         return response;
     }
 
-    // 7. List all products
+    // List all products
     @GetMapping
     public Map<String, Object> listProduct() {
         Map<String, Object> response = new HashMap<>();
@@ -89,31 +88,31 @@ public class ProductController {
         return response;
     }
 
-    // 8. Get product by category and storeId
-    @GetMapping("filter/{category}/{storeid}")
+    // Get product by category and storeId
+    @GetMapping("/filter/{category}/{storeId}")
     public Map<String, Object> getProductByCategoryAndStoreId(@PathVariable String category,
-                                                              @PathVariable Long storeid) {
+                                                              @PathVariable Long storeId) {
         Map<String, Object> response = new HashMap<>();
-        List<Product> products = productRepository.findProductByCategoryAndStoreId(category, storeid);
+        List<Product> products = productRepository.findProductByCategoryAndStoreId(category, storeId);
         response.put("product", products);
         return response;
     }
 
-    // 9. Delete product
+    // Delete product (and inventory)
     @DeleteMapping("/{id}")
     public Map<String, Object> deleteProduct(@PathVariable Long id) {
         Map<String, Object> response = new HashMap<>();
         if (serviceClass.validateProductId(id)) {
             inventoryRepository.deleteByProductId(id);
             productRepository.deleteById(id);
-            response.put("message", "Product deleted successfully.");
+            response.put("message", "Product and related inventory deleted successfully.");
         } else {
             response.put("message", "Product not found.");
         }
         return response;
     }
 
-    // 10. Search product by name
+    // Search product by name
     @GetMapping("/searchProduct/{name}")
     public Map<String, Object> searchProduct(@PathVariable String name) {
         Map<String, Object> response = new HashMap<>();
