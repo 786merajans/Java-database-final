@@ -18,28 +18,35 @@ public class ServiceClass {
     @Autowired
     private ProductRepository productRepository;
 
-    // 1. Validate inventory existence
+    // ✅ 1. validateInventory → checks if inventory exists for product-store combination
     public boolean validateInventory(Inventory inventory) {
         Optional<Inventory> existingInventory =
-                inventoryRepository.findByProductAndStore(inventory.getProduct(), inventory.getStore());
-        return existingInventory.isEmpty(); // false if inventory exists, true otherwise
+                inventoryRepository.findByProductIdAndStoreId(
+                        inventory.getProduct().getId(),
+                        inventory.getStore().getId()
+                );
+        // false if inventory exists, true otherwise
+        return existingInventory.isEmpty();
     }
 
-    // 2. Validate product existence by name
+    // ✅ 2. validateProduct → checks if product exists by name
     public boolean validateProduct(Product product) {
         Product existingProduct = productRepository.findByName(product.getName());
         return existingProduct == null; // false if product exists, true otherwise
     }
 
-    // 3. Validate product existence by ID
+    // ✅ 3. validateProductId → checks if product exists by ID
     public boolean validateProductId(long id) {
         return productRepository.existsById(id); // true if product exists, false otherwise
     }
 
-    // 4. Get inventory record for product-store combination
+    // ✅ 4. getInventoryId → returns inventory record using product + store IDs
     public Inventory getInventoryId(Inventory inventory) {
         Optional<Inventory> existingInventory =
-                inventoryRepository.findByProductAndStore(inventory.getProduct(), inventory.getStore());
+                inventoryRepository.findByProductIdAndStoreId(
+                        inventory.getProduct().getId(),
+                        inventory.getStore().getId()
+                );
         return existingInventory.orElse(null);
     }
 }
