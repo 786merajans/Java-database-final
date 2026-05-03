@@ -37,18 +37,18 @@ public class StoreController {
 
     // 5. Place order
     @PostMapping("/placeOrder")
-    public Map<String, String> placeOrder(@RequestBody PlaceOrderRequestDTO requestDTO) {
-        Map<String, String> response = new HashMap<>();
-        try {
-            boolean success = orderService.processOrder(requestDTO);
-            if (success) {
-                response.put("message", "Order placed successfully.");
-            } else {
-                response.put("Error", "Failed to process order.");
-            }
-        } catch (Exception e) {
-            response.put("Error", "An error occurred while placing the order.");
+public Map<String, String> placeOrder(@RequestBody PlaceOrderRequestDTO requestDTO) {
+    Map<String, String> response = new HashMap<>();
+    try {
+        boolean success = orderService.processOrder(requestDTO);
+        if (success) {
+            response.put("message", "Order placed successfully.");
+        } else {
+            response.put("Error", "Failed to process order.");
         }
-        return response;
+    } catch (Exception e) {
+        response.put("Error", "An error occurred while placing the order.");
     }
+    return response;
+}
 }
