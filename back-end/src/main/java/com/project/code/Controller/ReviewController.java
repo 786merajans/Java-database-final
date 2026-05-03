@@ -14,7 +14,7 @@ public class ReviewController {
     @Autowired
     private ReviewRepository reviewRepository;
 
-    // GET /reviews → return all reviews using findAll(), wrapped in structured response
+    // ✅ GET /reviews → return all reviews using findAll(), wrapped in structured response
     @GetMapping("/reviews")
     public Map<String, Object> getAllReviews() {
         Map<String, Object> response = new HashMap<>();
@@ -22,7 +22,7 @@ public class ReviewController {
         return response;
     }
 
-    // GET /{storeId}/{productId} → fetch reviews for a product in a store, include customer names
+    // ✅ GET /{storeId}/{productId} → fetch reviews for a product in a store, include customer names
     @GetMapping("/{storeId}/{productId}")
     public Map<String, Object> getReviewsByStoreAndProduct(@PathVariable Long storeId,
                                                            @PathVariable Long productId) {
