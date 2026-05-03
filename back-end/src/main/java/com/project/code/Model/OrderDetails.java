@@ -32,7 +32,7 @@ public class OrderDetails {
     private LocalDateTime date;
 
     // 6. Order items relationship
-    @OneToMany(mappedBy = "order", fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "customer", fetch = FetchType.EAGER)
     @JsonManagedReference
     private List<OrderItem> orderItems;
 
